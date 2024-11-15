@@ -5,16 +5,37 @@ window.onload = function() {
     const TOPEIZQUIERDA = 0;
     const TOPEDERECHA = 400;
 
+	let navePlayer;                    // Objeto nave base
 
     
     //Captura del click del botón de hmtl
     let botonJuego = document.getElementById("comenzarJuego").onclick = comenzarJuego;
 
-    //Función que se ejecuta al hacer click en el botón
-    function comenzarJuego(botonJuego) { 
-        alert("El juego ha comenzado")
+    function dibujar() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        if (navePlayer) {
+            dibujarNave();
+        }
     }
 
+    //Funcion crearnave
+    function crearNave() {
+        navePlayer = new nave();
+        
+    }
+
+    //Funcion para dibujar la nave
+    function dibujarNave() {
+        navePlayer.dibujar();
+
+    }
+
+    //Funcion para mover la nave
+    function moverNave() {
+        navePlayer.mover();
+    }
+    
 
     //Dibujar el fondo del canvas
     const canvas = document.getElementById('miCanvas');
@@ -24,5 +45,14 @@ window.onload = function() {
     img.onload = function() {
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
     }
+
+    //Función que se ejecuta al hacer click en el botón
+    function comenzarJuego(botonJuego) { 
+        console.log("El juego ha comenzado");
+        crearNave();
+        dibujar();
+        
+    }
+
 
 }

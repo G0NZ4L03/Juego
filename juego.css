@@ -5,10 +5,25 @@
     margin: auto;
 }
 
+body{
+    background-color: rgb(118, 118, 118);
+    
+}
+
 h1{
     text-align: center;
-    color: rgb(0, 98, 255);
+    color: rgb(40, 0, 170);
     margin: 30px;
+    
+}
+
+#contadores {
+    text-align: center;
+}
+
+#contadores p {
+    display: inline-block;
+    margin-right: 10px;
 }
 
 button{
@@ -16,4 +31,5 @@ button{
     margin: auto;
     margin-bottom: 20px;
 }
+
 
