@@ -67,21 +67,5 @@ window.onload = function() {
         dibujarFondo();
         dibujarNave();
     }
-
-    function pararNave(evt) {
-        switch(evt.keyCode) {
-            // Flecha izq
-			case 37:
-				teclaIzq = false;
-				break;
-
-			// Flecha derecha
-			case 39:
-				teclaDrch = false;
-				break;
-		}
-        dibujarFondo();
-        dibujarNave();
-	}
     
 }
