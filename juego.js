@@ -24,9 +24,9 @@ window.onload = function() {
 
     const disparoX = naveX + naveAncho / 2;
     let disparoY = naveY;
-    const disparoAncho = 5;
-    const disparoAltura = 10;
-    const disparoVelocidad = 10;
+    const disparoAncho = 2;
+    const disparoAltura = 13;
+    const disparoVelocidad = 1;
 
     let disparos = [];
 
@@ -86,6 +86,7 @@ window.onload = function() {
 
     }
 
+
     function dibujarDisparo(disparo) {
         console.log("Dibujando disparo en", disparo.x, disparo.y);
         ctx.fillStyle = 'red';
@@ -95,8 +96,9 @@ window.onload = function() {
 
     function actualizarDisparos() {
         console.log("Actualizando disparos");
+        dibujarFondo();
         dibujarNave();
-        disparos = disparos.filter(disparo => disparo.y > TOPEARRIBA); // Eliminar disparos que han llegado al tope
+        disparos = disparos.filter(disparo => disparo.y > TOPEABAJO); // Eliminar disparos que han salido del canvas
         disparos.forEach(dibujarDisparo);
         if (disparos.length > 0) {
             requestAnimationFrame(actualizarDisparos);
@@ -104,15 +106,14 @@ window.onload = function() {
     }
 
     function disparo(evt) {
-        // Captura de la tecla espacio
         if (evt.keyCode == teclaEspacio) {
             console.log("Tecla espacio presionada");
-            // Crear un nuevo disparo
             let nuevoDisparo = {
                 x: naveX + naveAncho / 2 - disparoAncho / 2,
                 y: naveY
             };
-            
+            disparos.push(nuevoDisparo);
+            actualizarDisparos();
         }
     }
 }
