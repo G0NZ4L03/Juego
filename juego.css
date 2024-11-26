@@ -7,14 +7,12 @@
 
 body{
     background-color: rgb(118, 118, 118);
-    
 }
 
 h1{
     text-align: center;
     color: rgb(40, 0, 170);
-    margin: 30px;
-    
+    margin: 30px; 
 }
 
 #contadores {

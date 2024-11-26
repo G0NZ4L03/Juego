@@ -3,8 +3,8 @@ window.onload = function () {
     // 1. Declaración de variables y constantes globales
 
     //Bordes del canva
-    const TOPEARRIBA = 600;
-    const TOPEABAJO = 0;
+    const TOPEABAJO = 600;
+    const TOPEARRIBA = 0;
     const TOPEIZQUIERDA = 0;
     const TOPEDERECHA = 400;
 
@@ -35,11 +35,11 @@ window.onload = function () {
     let existeDisparo = false;
 
     //Objeto enemigo
-    const enemigoX = 180;
-    const enemigoY = 30;
-    const enemigoAncho = 40;
-    const enemigoAltura = 34;
-    const enemigoVelocidad = 1;
+    const enemigoX = 80;
+    const enemigoY = 50;
+    const enemigoAncho = 260;
+    const enemigoAltura = 180;
+    const enemigoVelocidad = 10;
     
 
     //Imagen de fondo
@@ -77,36 +77,36 @@ window.onload = function () {
     let miNave = new nave();
 
 
-    // 3. Definición de la clase enemigo y sus métodos en el prototipo (COPIA DE NAVE "TODO" CAMBIAR)
+    // 3. Definición de la clase enemigo y sus métodos en el prototipo
 
-    // function nave() {
-    //     this.x = naveX;
-    //     this.y = naveY;
-    //     this.ancho = naveAncho;
-    //     this.altura = naveAltura;
-    //     this.velocidad = naveVelocidad;
-    //     this.imagen = new Image();
-    //     this.imagen.src = '/assets/nave2.png';
-    // }
+    function enemigo() {
+        this.x = enemigoX;
+        this.y = enemigoY;
+        this.ancho = enemigoAncho;
+        this.altura = enemigoAltura;
+        this.velocidad = enemigoVelocidad;
+        this.imagen = new Image();
+        this.imagen.src = 'assets/enemigos.png';
+    }
 
-    // nave.prototype.dibujarNave = function (ctx) {
-    //     ctx.drawImage(this.imagen, this.x, this.y, this.ancho, this.altura);
-    // }
+    enemigo.prototype.dibujarEnemigo = function (ctx) {
+        ctx.drawImage(this.imagen, this.x, this.y, this.ancho, this.altura);
+    }
 
-    // nave.prototype.moverNaveDrch = function () {
-    //     if (this.x < canvas.width - this.ancho) {
-    //         this.x += this.velocidad;
-    //     }
-    // }
+    enemigo.prototype.moverEnemigoDrch = function () {
+        if (this.x < canvas.width - this.ancho) {
+            this.x += this.velocidad;
+        }
+    }
 
-    // nave.prototype.moverNaveIzq = function () {
-    //     if (this.x > 0) {
-    //         this.x -= this.velocidad;
-    //     }
-    // }
+    enemigo.prototype.moverEnemigoIzq = function () {
+        if (this.x > 0) {
+            this.x -= this.velocidad;
+        }
+    }
 
 
-    // let miNave = new nave();
+    let mienemigo = new enemigo();
 
     // 4. Funciones de dibujo
     function dibujarFondo() {
@@ -122,6 +122,10 @@ window.onload = function () {
         ctx.fillStyle = 'red';
         ctx.fillRect(disparo.x, disparo.y, disparoAncho, disparoAltura);
         disparo.y -= disparoVelocidad;
+    }
+
+    function dibujarEnemigo() {
+        mienemigo.dibujarEnemigo(ctx);
     }
 
     // 5. Funciones de manejo de eventos
@@ -141,6 +145,7 @@ window.onload = function () {
         }
         dibujarFondo();
         dibujarNave();
+        dibujarEnemigo();
     }
 
     function disparo(evt) {
@@ -161,7 +166,8 @@ window.onload = function () {
     function actualizarDisparos() {
         dibujarFondo();
         dibujarNave();
-        disparos = disparos.filter(disparo => disparo.y > TOPEABAJO); // Eliminar disparos que han salido del canvas
+        dibujarEnemigo();
+        disparos = disparos.filter(disparo => disparo.y > TOPEARRIBA); // Eliminar disparos que han salido del canvas
         disparos.forEach(dibujarDisparo);
         if (disparos.length > 0) {
             requestAnimationFrame(actualizarDisparos);
@@ -178,6 +184,7 @@ window.onload = function () {
         console.log("empieza el juego");
         dibujarFondo();
         dibujarNave();
+        dibujarEnemigo();
 
         // Desactivar el botón para evitar múltiples llamadas
         document.getElementById("comenzarJuego").onclick = null;
