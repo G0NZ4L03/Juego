@@ -9,9 +9,9 @@ window.onload = function () {
     const TOPEDERECHA = 400;
 
     //Teclas
-    const teclaDrch = 39;
-    const teclaIzq = 37;
-    const teclaEspacio = 32;
+    const TECLADRCH = 39;
+    const TECLAIZQ = 37;
+    const TECLAESPACIO = 32;
 
     //Canvas y su contexto
     const canvas = document.getElementById('miCanvas');
@@ -19,20 +19,23 @@ window.onload = function () {
 
     //Objeto nave
     let naveX = 180;
-    const naveY = 560;
-    const naveAncho = 40;
-    const naveAltura = 34;
+    const NAVEY = 560;
+    const NAVEANCHO = 40;
+    const NAVEALTURA = 34;
     let naveVelocidad = 20;
 
     //Objeto disparo
-    const disparoX = naveX + naveAncho / 2;
-    let disparoY = naveY;
-    const disparoAncho = 3;
-    const disparoAltura = 15;
-    const disparoVelocidad = 1;
+    const DISPAROX = naveX + NAVEANCHO / 2;
+    let disparoY = NAVEY;
+    const DISPAROANCHO = 3;
+    const DISPAROALTURA = 15;
+    const DISPAROVELOCIDAD = 1;
 
     let disparos = [];
     let existeDisparo = false;
+
+    const SONIDODISPARO = new Audio('/assets/sonidos/disparo.mp3');
+
 
     //Objeto enemigo
     const enemigoX = 80;
@@ -49,9 +52,9 @@ window.onload = function () {
     // 2. Definición de la clase nave y sus métodos en el prototipo
     function nave() {
         this.x = naveX;
-        this.y = naveY;
-        this.ancho = naveAncho;
-        this.altura = naveAltura;
+        this.y = NAVEY;
+        this.ancho = NAVEANCHO;
+        this.altura = NAVEALTURA;
         this.velocidad = naveVelocidad;
         this.imagen = new Image();
         this.imagen.src = '/assets/nave2.png';
@@ -120,8 +123,8 @@ window.onload = function () {
 
     function dibujarDisparo(disparo) {
         ctx.fillStyle = 'red';
-        ctx.fillRect(disparo.x, disparo.y, disparoAncho, disparoAltura);
-        disparo.y -= disparoVelocidad;
+        ctx.fillRect(disparo.x, disparo.y, DISPAROANCHO, DISPAROALTURA);
+        disparo.y -= DISPAROVELOCIDAD;
     }
 
     function dibujarEnemigo() {
@@ -131,15 +134,15 @@ window.onload = function () {
     // 5. Funciones de manejo de eventos
     function keyDown(evt) {
         switch (evt.keyCode) {
-            case teclaIzq:
+            case TECLAIZQ:
                 miNave.moverNaveIzq();
                 console.log("mover izquierda");
                 break;
-            case teclaDrch:
+            case TECLADRCH:
                 miNave.moverNaveDrch();
                 console.log("mover derecha");
                 break;
-            case teclaEspacio:
+            case TECLAESPACIO:
                 disparo(evt);
                 break;
         }
@@ -148,11 +151,17 @@ window.onload = function () {
         dibujarEnemigo();
     }
 
+    function reproducirSonidoDisparo() {
+        SONIDODISPARO.currentTime = 0;
+        SONIDODISPARO.play();
+    }
+
     function disparo(evt) {
-        if (evt.keyCode == teclaEspacio) {
+        if (evt.keyCode == TECLAESPACIO) {
+            reproducirSonidoDisparo();
             console.log("funcion disparo llamada");
             let nuevoDisparo = {
-                x: miNave.x + naveAncho / 2 - disparoAncho / 2,
+                x: miNave.x + NAVEANCHO / 2 - DISPAROANCHO / 2,
                 y: miNave.y
             };
             disparos.push(nuevoDisparo);

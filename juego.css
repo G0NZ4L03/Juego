@@ -1,33 +1,22 @@
-#miCanvas { 
-    border: solid 3px #384; 
-    margin: 20px; 
-    display: block;
-    margin: auto;
-}
-
-body{
-    background-color: rgb(118, 118, 118);
-}
-
-h1{
-    text-align: center;
-    color: rgb(40, 0, 170);
-    margin: 30px; 
-}
-
-#contadores {
+body {
+    background-color: black;
+    color: white;
     text-align: center;
 }
 
-#contadores p {
-    display: inline-block;
-    margin-right: 10px;
+#miCanvas {
+    border: 1px solid white;
+    background-color: black;
 }
 
-button{
-    display: block;
-    margin: auto;
-    margin-bottom: 20px;
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
 }
 
-
+button:hover {
+    background-color: #45a050;
+}
