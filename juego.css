@@ -1,6 +1,7 @@
 body {
-    background-color: black;
-    color: white;
+    /*background-color: black;*/
+    background-image: url('assets/fondo.png');
+    color: #FFFFFF;
     text-align: center;
 }
 
