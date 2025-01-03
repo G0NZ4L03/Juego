@@ -4,12 +4,10 @@
         this.x = x_;
         this.y = y_; 
         this.velocidad = enemigoVelocidad;
+        this.imagen = new Image();
+        this.imagen.src = './assets/enemigos.png';
         
     }
-    
-    Enemigo.imagen = new Image();
-    Enemigo.imagen.src = './assets/enemigos.png';
-    //Enemigo.prototype.audio = new Audio("./assets/sound/explosion.mp3");
 
     Enemigo.prototype.dibujarEnemigo = function (ctx_) {
         ctx_.drawImage(this.imagen, this.x, this.y);

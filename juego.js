@@ -1,20 +1,17 @@
 window.onload = function () {
 
     // 1. Declaración de variables
-    let canvas;
-	let ctx;
-
     let miNave;
     let miEnemigo;
 
     let disparos = [];
     let existeDisparo = false;
 
-    const SONIDODISPARO = new Audio('/assets/sonidos/disparo.mp3');
+    let id;
 
 
     function generarNave () {
-        miNave = new Nave(180, 560);
+        miNave = new Nave(183, 545); 
     }
 
     function generarEnemigo () {
@@ -24,9 +21,8 @@ window.onload = function () {
 
 
     // 4. Funciones de dibujo
-    function dibujarFondo() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = 'black';
+   function dibujarFondo() {
+       ctx.fillStyle = 'gray';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 
@@ -41,6 +37,7 @@ window.onload = function () {
     }
 
     function dibujarNave() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // Limpiar el canvas
         miNave.dibujarNave(ctx);
     }
 
@@ -48,12 +45,14 @@ window.onload = function () {
     function keyDown(evt) {
         switch (evt.keyCode) {
             case TECLAIZQ:
-                miNave.moverNaveIzq();
+                miNave.moverNaveIzq(); 
+                dibujarFondo();
                 dibujarNave();
                 console.log("mover izquierda");
                 break;
             case TECLADRCH:
                 miNave.moverNaveDrch();
+                dibujarFondo();
                 dibujarNave();
                 console.log("mover derecha");
                 break;
@@ -61,8 +60,8 @@ window.onload = function () {
                 disparo(evt);
                 break;
         }
-        dibujarFondo();
         dibujarEnemigo();
+        dibujarNave();
     }
 
     function reproducirSonidoDisparo() {
@@ -75,7 +74,7 @@ window.onload = function () {
             reproducirSonidoDisparo();
             console.log("funcion disparo llamada");
             let nuevoDisparo = {
-                x: miNave.x + NAVEANCHO / 2 - DISPAROANCHO / 2,
+                x: miNave.x + NAVEANCHO / 2 + DISPAROANCHO,
                 y: miNave.y
             };
             disparos.push(nuevoDisparo);
@@ -87,9 +86,9 @@ window.onload = function () {
     }
 
     function actualizarDisparos() {
-        dibujarFondo();
-        //dibujarNave();
+        dibujarNave();
         dibujarEnemigo();
+        // dibujarFondo();
         disparos = disparos.filter(disparo => disparo.y > TOPEARRIBA); // Eliminar disparos que han salido del canvas
         disparos.forEach(dibujarDisparo);
         if (disparos.length > 0) {
@@ -109,9 +108,14 @@ window.onload = function () {
 
 
         console.log("empieza el juego");
-        dibujarFondo();
         generarNave();
         generarEnemigo(); 
+        
+        dibujarNave();
+        dibujarEnemigo();
+        
+		id=setInterval(generaAnimación, 500 / 32);
+
 
         // Desactivar el botón para evitar múltiples llamadas
         document.getElementById("comenzarJuego").onclick = null;
