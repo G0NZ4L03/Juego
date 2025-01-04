@@ -2,9 +2,9 @@
     function Nave (naveX, naveY) {
         this.x = naveX;
         this.y = naveY;
-        this.ancho = 50; // Ajusta el ancho deseado
-        this.alto = 50;
-        this.velocidad = 5; // Define la propiedad velocidad
+        this.ancho = NAVEANCHO;
+        this.alto = NAVEALTURA;
+        this.velocidad = NAVEVELOCIDAD;
 
     }
     

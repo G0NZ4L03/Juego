@@ -1,13 +1,14 @@
     // 3. Definición de la clase enemigo y sus métodos en el prototipo
 
-    function Enemigo(x_, y_, enemigoVelocidad) {
+    function Enemigo(x_, y_) {
         this.x = x_;
         this.y = y_; 
-        this.velocidad = enemigoVelocidad;
-        this.imagen = new Image();
-        this.imagen.src = './assets/enemigos.png';
+        this.velocidad = ENEMIGOVELOCIDAD;
+
         
     }
+    Enemigo.prototype.imagen = new Image();
+    Enemigo.prototype.imagen.src = "./assets/enemigos.png";	   	
 
     Enemigo.prototype.dibujarEnemigo = function (ctx_) {
         ctx_.drawImage(this.imagen, this.x, this.y);

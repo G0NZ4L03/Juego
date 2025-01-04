@@ -3,22 +3,23 @@ window.onload = function () {
     // 1. Declaración de variables
     let miNave;
     let miEnemigo;
+    let id;
 
     let disparos = [];
     let existeDisparo = false;
 
-    let id;
+	let navesEnemigas = [];      // Array con todas las naves enemigas
 
 
     function generarNave () {
-        miNave = new Nave(183, 545); 
+        miNave = new Nave(179, 545); 
     }
 
-    function generarEnemigo () {
-        miEnemigo = new Enemigo();
+    function generarNavesEnemigas() {
+        miEnemigo = new Enemigo(100,200);
+
+        navesEnemigas.push(miEnemigo);
     }
-
-
 
     // 4. Funciones de dibujo
    function dibujarFondo() {
@@ -74,7 +75,7 @@ window.onload = function () {
             reproducirSonidoDisparo();
             console.log("funcion disparo llamada");
             let nuevoDisparo = {
-                x: miNave.x + NAVEANCHO / 2 + DISPAROANCHO,
+                x: miNave.x + miNave.ancho / 2 - DISPAROANCHO /2,
                 y: miNave.y
             };
             disparos.push(nuevoDisparo);
@@ -98,6 +99,12 @@ window.onload = function () {
         }
     }
 
+    function generaAnimación() {    
+        dibujarFondo();
+        dibujarNave();
+        dibujarEnemigo();
+    }   
+
     // 6. Configuración de boton de inicio
     document.getElementById("comenzarJuego").onclick = comenzarJuego;
 
@@ -109,12 +116,13 @@ window.onload = function () {
 
         console.log("empieza el juego");
         generarNave();
-        generarEnemigo(); 
+        generarNavesEnemigas(); 
         
         dibujarNave();
         dibujarEnemigo();
         
-		id=setInterval(generaAnimación, 500 / 32);
+        //frecuencia de refresco
+		id = setInterval(generaAnimación, 1000 / 60);
 
 
         // Desactivar el botón para evitar múltiples llamadas
