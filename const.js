@@ -10,8 +10,8 @@ const TECLAIZQ = 37;
 const TECLAESPACIO = 32;
 
 //Objeto nave
-const NAVEANCHO = 42;
-const NAVEALTURA = 45;
+const NAVEANCHO = 74;
+const NAVEALTURA = 50;
 const NAVEVELOCIDAD = 10;
 
 // Objeto disparo
@@ -19,13 +19,12 @@ const NAVEVELOCIDAD = 10;
 //let disparoY = NAVEY;
 const DISPAROANCHO = 3;
 const DISPAROALTURA = 15;
-const DISPAROVELOCIDAD = 2.5;
+const DISPAROVELOCIDAD = 5;
 
 //Objeto enemigo
-const ENEMIGOVELOCIDAD = 1;
+const ENEMIGOVELOCIDAD = 5;
 const BAJADAENEMIGO = 20;
 const SONIDODISPARO = new Audio('/assets/sonidos/disparo.mp3');
+const RECORTEENEMIGOX = 23;
+const RECORTEENEMIGOY = 23;
 
-//Variables canvas
-let canvas;
-let ctx;

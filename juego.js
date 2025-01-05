@@ -3,7 +3,12 @@ window.onload = function () {
     // 1. Declaración de variables
     let miNave;
     let miEnemigo;
-    let id;
+    let frecuenciaJuego;
+    let frecuenciaSprite;
+
+    //Variables canvas
+    let canvas;
+    let ctx;
 
     let disparos = [];
     let existeDisparo = false;
@@ -23,12 +28,12 @@ window.onload = function () {
 
     // 4. Funciones de dibujo
    function dibujarFondo() {
-       ctx.fillStyle = 'gray';
+       ctx.fillStyle = '#00137A';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 
     function dibujarDisparo(disparo) {
-        ctx.fillStyle = 'red';
+        ctx.fillStyle = '#FF0000';
         ctx.fillRect(disparo.x, disparo.y, DISPAROANCHO, DISPAROALTURA);
         disparo.y -= DISPAROVELOCIDAD;
     }
@@ -38,8 +43,11 @@ window.onload = function () {
     }
 
     function dibujarNave() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height); // Limpiar el canvas
         miNave.dibujarNave(ctx);
+    }
+
+function movimientoEnemigos() {
+
     }
 
     // 5. Funciones de manejo de eventos
@@ -47,14 +55,14 @@ window.onload = function () {
         switch (evt.keyCode) {
             case TECLAIZQ:
                 miNave.moverNaveIzq(); 
-                dibujarFondo();
-                dibujarNave();
+                // dibujarFondo();
+                // dibujarNave();
                 console.log("mover izquierda");
                 break;
             case TECLADRCH:
                 miNave.moverNaveDrch();
-                dibujarFondo();
-                dibujarNave();
+                // dibujarFondo();
+                // dibujarNave();
                 console.log("mover derecha");
                 break;
             case TECLAESPACIO:
@@ -87,9 +95,9 @@ window.onload = function () {
     }
 
     function actualizarDisparos() {
-        dibujarNave();
-        dibujarEnemigo();
         // dibujarFondo();
+        // dibujarNave();
+        // dibujarEnemigo();
         disparos = disparos.filter(disparo => disparo.y > TOPEARRIBA); // Eliminar disparos que han salido del canvas
         disparos.forEach(dibujarDisparo);
         if (disparos.length > 0) {
@@ -118,11 +126,13 @@ window.onload = function () {
         generarNave();
         generarNavesEnemigas(); 
         
+        dibujarFondo();
         dibujarNave();
         dibujarEnemigo();
         
         //frecuencia de refresco
-		id = setInterval(generaAnimación, 1000 / 60);
+		frecuenciaJuego = setInterval(generaAnimación, 500 / 32);
+		frecuenciaSprite = setInterval(movimientoEnemigos, 500 / 32);
 
 
         // Desactivar el botón para evitar múltiples llamadas
