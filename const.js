@@ -22,9 +22,10 @@ const DISPAROALTURA = 15;
 const DISPAROVELOCIDAD = 5;
 
 //Objeto enemigo
-const ENEMIGOVELOCIDAD = 5;
-const BAJADAENEMIGO = 20;
+const ENEMIGOVELOCIDAD = 2;
+const BAJADAENEMIGO = 1;
 const SONIDODISPARO = new Audio('/assets/sonidos/disparo.mp3');
 const RECORTEENEMIGOX = 23;
 const RECORTEENEMIGOY = 23;
+
 

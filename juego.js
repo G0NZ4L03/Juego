@@ -6,10 +6,10 @@ window.onload = function () {
     let frecuenciaJuego;
     let frecuenciaSprite;
 
-    //Variables canvas
-    let canvas;
-    let ctx;
-
+   //Variables canvas
+   let canvas;
+   let ctx;
+ 
     let disparos = [];
     let existeDisparo = false;
 
@@ -42,13 +42,15 @@ window.onload = function () {
         miEnemigo.dibujarEnemigo(ctx);
     }
 
-    function dibujarNave() {
+    function dibujarNave() {  
         miNave.dibujarNave(ctx);
     }
 
 function movimientoEnemigos() {
+    miEnemigo.actualizarAnimacion();
 
-    }
+    };
+
 
     // 5. Funciones de manejo de eventos
     function keyDown(evt) {
@@ -111,9 +113,10 @@ function movimientoEnemigos() {
         dibujarFondo();
         dibujarNave();
         dibujarEnemigo();
+        miEnemigo.actualizarAnimacion();
     }   
 
-    // 6. Configuración de boton de inicio
+
     document.getElementById("comenzarJuego").onclick = comenzarJuego;
 
     // 7. Función para comenzar el juego
