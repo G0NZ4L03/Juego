@@ -15,6 +15,13 @@ window.onload = function () {
 
 	let navesEnemigas = [];      // Array con todas las naves enemigas
 
+    let estoyMuerto = false;
+
+
+
+
+
+
 
     function generarNave () {
         miNave = new Nave(179, 545); 
@@ -97,10 +104,8 @@ function movimientoEnemigos() {
     }
 
     function actualizarDisparos() {
-        // dibujarFondo();
-        // dibujarNave();
-        // dibujarEnemigo();
         disparos = disparos.filter(disparo => disparo.y > TOPEARRIBA); // Eliminar disparos que han salido del canvas
+        
         disparos.forEach(dibujarDisparo);
         if (disparos.length > 0) {
             requestAnimationFrame(actualizarDisparos);
@@ -113,9 +118,26 @@ function movimientoEnemigos() {
         dibujarFondo();
         dibujarNave();
         dibujarEnemigo();
-        miEnemigo.actualizarAnimacion();
+
     }   
 
+function heMuerto() {
+    do{
+        if (colision(miNave, miEnemigo)) {
+            estoyMuerto = true;
+            console.log("he muerto");
+        }
+    }
+    while (!estoyMuerto);
+}
+    function colision(disparo, enemigo) {
+        // Aquí puedes definir la lógica de colisión, por ejemplo:
+        return disparo.x < enemigo.x + enemigo.width &&
+               disparo.x + disparo.width > enemigo.x &&
+               disparo.y < enemigo.y + enemigo.height &&
+               disparo.y + disparo.height > enemigo.y;
+
+    }
 
     document.getElementById("comenzarJuego").onclick = comenzarJuego;
 
@@ -134,8 +156,8 @@ function movimientoEnemigos() {
         dibujarEnemigo();
         
         //frecuencia de refresco
-		frecuenciaJuego = setInterval(generaAnimación, 500 / 32);
-		frecuenciaSprite = setInterval(movimientoEnemigos, 500 / 32);
+		frecuenciaJuego = setInterval(generaAnimación, 1000 / 60);
+		frecuenciaSprite = setInterval(movimientoEnemigos, 1000 / 3);
 
 
         // Desactivar el botón para evitar múltiples llamadas

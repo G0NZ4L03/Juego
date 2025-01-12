@@ -19,10 +19,10 @@ const NAVEVELOCIDAD = 10;
 //let disparoY = NAVEY;
 const DISPAROANCHO = 3;
 const DISPAROALTURA = 15;
-const DISPAROVELOCIDAD = 5;
+const DISPAROVELOCIDAD = 1.7;
 
 //Objeto enemigo
-const ENEMIGOVELOCIDAD = 2;
+const ENEMIGOVELOCIDAD = 8;
 const BAJADAENEMIGO = 1;
 const SONIDODISPARO = new Audio('/assets/sonidos/disparo.mp3');
 const RECORTEENEMIGOX = 23;
