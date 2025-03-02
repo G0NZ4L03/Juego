@@ -18,19 +18,22 @@ window.onload = function () {
     let estoyMuerto = false;
 
 
-
-
-
-
-
     function generarNave () {
         miNave = new Nave(179, 545); 
     }
 
     function generarNavesEnemigas() {
-        miEnemigo = new Enemigo(100,200);
-
-        navesEnemigas.push(miEnemigo);
+        let posicionX = 50;
+        let posicionY = 100;
+        for (let i = 0; i < 24; i++) {
+            miEnemigo = new Enemigo(posicionX, posicionY);
+            navesEnemigas.push(miEnemigo);
+            posicionX += 40; // Espacio entre naves enemigas
+            if (posicionX > canvas.width - 60) { // A 60px del borde se baja una fila
+                posicionX = 50;
+                posicionY += 50;
+            }
+        }
     }
 
     // 4. Funciones de dibujo
@@ -46,32 +49,30 @@ window.onload = function () {
     }
 
     function dibujarEnemigo() {
-        miEnemigo.dibujarEnemigo(ctx);
+        for (let i = 0; i < navesEnemigas.length; i++) { // Dibujo cada enemigo que haya en el array
+            navesEnemigas[i].dibujarEnemigo(ctx);
+        }
     }
 
     function dibujarNave() {  
         miNave.dibujarNave(ctx);
     }
 
-function movimientoEnemigos() {
-    miEnemigo.actualizarAnimacion();
-
+    function movimientoEnemigos() {
+        for (let i = 0; i < navesEnemigas.length; i++) {
+            navesEnemigas[i].actualizarAnimacion();
+        }
     };
-
 
     // 5. Funciones de manejo de eventos
     function keyDown(evt) {
         switch (evt.keyCode) {
             case TECLAIZQ:
                 miNave.moverNaveIzq(); 
-                // dibujarFondo();
-                // dibujarNave();
                 console.log("mover izquierda");
                 break;
             case TECLADRCH:
                 miNave.moverNaveDrch();
-                // dibujarFondo();
-                // dibujarNave();
                 console.log("mover derecha");
                 break;
             case TECLAESPACIO:
@@ -118,26 +119,36 @@ function movimientoEnemigos() {
         dibujarFondo();
         dibujarNave();
         dibujarEnemigo();
-
+        
+        // Compruebo colision de nave con enemigos y paro el juego
+        if (heMuerto()) {
+            estoyMuerto = true;
+            console.log("He muerto");
+            pararJuego();
+        }
     }   
 
-function heMuerto() {
-    do{
-        if (colision(miNave, miEnemigo)) {
-            estoyMuerto = true;
-            console.log("he muerto");
+    function heMuerto() {
+        for (let i = 0; i < navesEnemigas.length; i++) {
+            if (colision(miNave, navesEnemigas[i])) {
+                return true;
+            }
         }
+        return false;
     }
-    while (!estoyMuerto);
-}
-    function colision(disparo, enemigo) {
-        // Aquí puedes definir la lógica de colisión, por ejemplo:
-        return disparo.x < enemigo.x + enemigo.width &&
-               disparo.x + disparo.width > enemigo.x &&
-               disparo.y < enemigo.y + enemigo.height &&
-               disparo.y + disparo.height > enemigo.y;
 
-    }
+function colision(objeto1, objeto2) {
+    return objeto1.x < objeto2.x + objeto2.width &&
+           objeto1.x + objeto1.width > objeto2.x &&
+           objeto1.y < objeto2.y + objeto2.height &&
+           objeto1.y + objeto1.height > objeto2.y;
+}
+
+function pararJuego() {
+    clearInterval(frecuenciaJuego);
+    clearInterval(frecuenciaSprite);
+    console.log("Animaciones paradas");
+}
 
     document.getElementById("comenzarJuego").onclick = comenzarJuego;
 
