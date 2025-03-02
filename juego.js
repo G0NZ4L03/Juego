@@ -6,20 +6,19 @@ window.onload = function () {
     let frecuenciaJuego;
     let frecuenciaSprite;
 
-   //Variables canvas
-   let canvas;
-   let ctx;
- 
+    //Variables canvas
+    let canvas;
+    let ctx;
+
     let disparos = [];
     let existeDisparo = false;
 
-	let navesEnemigas = [];      // Array con todas las naves enemigas
+    let navesEnemigas = [];      // Array con todas las naves enemigas
 
     let estoyMuerto = false;
 
-
-    function generarNave () {
-        miNave = new Nave(179, 545); 
+    function generarNave() {
+        miNave = new Nave(179, 545);
     }
 
     function generarNavesEnemigas() {
@@ -37,8 +36,8 @@ window.onload = function () {
     }
 
     // 4. Funciones de dibujo
-   function dibujarFondo() {
-       ctx.fillStyle = '#00137A';
+    function dibujarFondo() {
+        ctx.fillStyle = '#00137A';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 
@@ -54,7 +53,7 @@ window.onload = function () {
         }
     }
 
-    function dibujarNave() {  
+    function dibujarNave() {
         miNave.dibujarNave(ctx);
     }
 
@@ -68,7 +67,7 @@ window.onload = function () {
     function keyDown(evt) {
         switch (evt.keyCode) {
             case TECLAIZQ:
-                miNave.moverNaveIzq(); 
+                miNave.moverNaveIzq();
                 console.log("mover izquierda");
                 break;
             case TECLADRCH:
@@ -93,11 +92,11 @@ window.onload = function () {
             reproducirSonidoDisparo();
             console.log("funcion disparo llamada");
             let nuevoDisparo = {
-                x: miNave.x + miNave.ancho / 2 - DISPAROANCHO /2,
+                x: miNave.x + miNave.ancho / 2 - DISPAROANCHO / 2,
                 y: miNave.y
             };
             disparos.push(nuevoDisparo);
-            if(!existeDisparo){
+            if (!existeDisparo) {
                 existeDisparo = true;
                 actualizarDisparos();
             }
@@ -106,7 +105,7 @@ window.onload = function () {
 
     function actualizarDisparos() {
         disparos = disparos.filter(disparo => disparo.y > TOPEARRIBA); // Eliminar disparos que han salido del canvas
-        
+
         disparos.forEach(dibujarDisparo);
         if (disparos.length > 0) {
             requestAnimationFrame(actualizarDisparos);
@@ -115,18 +114,20 @@ window.onload = function () {
         }
     }
 
-    function generaAnimación() {    
+    function generaAnimación() {
         dibujarFondo();
         dibujarNave();
         dibujarEnemigo();
-        
+        console.log("Mi nave:", miNave); // Depuración
+        console.log("Enemigos:", navesEnemigas);// Depuración
+
         // Compruebo colision de nave con enemigos y paro el juego
         if (heMuerto()) {
             estoyMuerto = true;
             console.log("He muerto");
             pararJuego();
         }
-    }   
+    }
 
     function heMuerto() {
         for (let i = 0; i < navesEnemigas.length; i++) {
@@ -137,18 +138,22 @@ window.onload = function () {
         return false;
     }
 
-function colision(objeto1, objeto2) {
-    return objeto1.x < objeto2.x + objeto2.width &&
-           objeto1.x + objeto1.width > objeto2.x &&
-           objeto1.y < objeto2.y + objeto2.height &&
-           objeto1.y + objeto1.height > objeto2.y;
-}
+    function colision(objeto1, objeto2) {
+        console.log("Verificando colisión entre:", objeto1, objeto2); // Depuración
+        if (objeto1.x < objeto2.x + objeto2.width &&
+            objeto1.x + objeto1.width > objeto2.x &&
+            objeto1.y < objeto2.y + objeto2.height &&
+            objeto1.y + objeto1.height > objeto2.y) {
+            return true;
+        }
+        return false;
+    }
 
-function pararJuego() {
-    clearInterval(frecuenciaJuego);
-    clearInterval(frecuenciaSprite);
-    console.log("Animaciones paradas");
-}
+    function pararJuego() {
+        clearInterval(frecuenciaJuego);
+        clearInterval(frecuenciaSprite);
+        console.log("Animaciones paradas");
+    }
 
     document.getElementById("comenzarJuego").onclick = comenzarJuego;
 
@@ -157,19 +162,19 @@ function pararJuego() {
         canvas = document.getElementById('miCanvas');
         ctx = canvas.getContext('2d');
 
-
         console.log("empieza el juego");
+        console.log(navesEnemigas); // Depuración
+
         generarNave();
-        generarNavesEnemigas(); 
-        
+        generarNavesEnemigas();
+
         dibujarFondo();
         dibujarNave();
         dibujarEnemigo();
-        
-        //frecuencia de refresco
-		frecuenciaJuego = setInterval(generaAnimación, 1000 / 60);
-		frecuenciaSprite = setInterval(movimientoEnemigos, 1000 / 3);
 
+        //frecuencia de refresco
+        frecuenciaJuego = setInterval(generaAnimación, 1000 / 60);
+        frecuenciaSprite = setInterval(movimientoEnemigos, 1000 / 3);
 
         // Desactivar el botón para evitar múltiples llamadas
         document.getElementById("comenzarJuego").onclick = null;

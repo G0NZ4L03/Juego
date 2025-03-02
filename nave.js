@@ -5,11 +5,10 @@
         this.ancho = NAVEANCHO;
         this.alto = NAVEALTURA;
         this.velocidad = NAVEVELOCIDAD;
-
     }
     
     Nave.prototype.imagen = new Image();
-    Nave.prototype.imagen.src="./assets/nave.png";		
+    Nave.prototype.imagen.src="./assets/nave.png";
 
     Nave.prototype.dibujarNave = function (ctx_) {
         ctx_.drawImage(this.imagen, this.x, this.y, this.ancho, this.alto);

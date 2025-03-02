@@ -22,7 +22,8 @@ const DISPAROALTURA = 15;
 const DISPAROVELOCIDAD = 1.7;
 
 //Objeto enemigo
-const ENEMIGOVELOCIDAD = 8;
+//Aumento velocidad para probar colisiones
+const ENEMIGOVELOCIDAD = 28;
 const BAJADAENEMIGO = 1;
 const SONIDODISPARO = new Audio('/assets/sonidos/disparo.mp3');
 const RECORTEENEMIGOX = 23;
