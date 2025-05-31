@@ -93,7 +93,9 @@ window.onload = function () {
             console.log("funcion disparo llamada");
             let nuevoDisparo = {
                 x: miNave.x + miNave.ancho / 2 - DISPAROANCHO / 2,
-                y: miNave.y
+                y: miNave.y,
+                ancho: DISPAROANCHO,
+                alto: DISPAROALTURA,
             };
             disparos.push(nuevoDisparo);
             if (!existeDisparo) {
@@ -104,6 +106,8 @@ window.onload = function () {
     }
 
     function actualizarDisparos() {
+        if (estoyMuerto) return;
+
         disparos = disparos.filter(disparo => disparo.y > TOPEARRIBA); // Eliminar disparos que han salido del canvas
 
         disparos.forEach(dibujarDisparo);
@@ -115,18 +119,39 @@ window.onload = function () {
     }
 
     function generaAnimación() {
+
+            if (heMuerto()) {
+                estoyMuerto = true;
+                console.log("He muerto");
+                pararJuego();
+
+                // Repintar canvas al morir
+                if (heMuerto()) {
+                    pararJuego();
+                    
+                    // Pintar fondo negro
+                    ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                    // Pintar GAME OVER
+                    ctx.fillStyle = "white";
+                    ctx.font = "48px Arial";
+                    ctx.textAlign = "center";
+                    ctx.fillText("GAME OVER", canvas.width / 2, 150);
+                
+                    return;
+                }
+                return; 
+            }
+            
         dibujarFondo();
         dibujarNave();
         dibujarEnemigo();
+        detectarColisionesDisparos(); 
+
         console.log("Mi nave:", miNave); // Depuración
         console.log("Enemigos:", navesEnemigas);// Depuración
 
-        // Compruebo colision de nave con enemigos y paro el juego
-        if (heMuerto()) {
-            estoyMuerto = true;
-            console.log("He muerto");
-            pararJuego();
-        }
     }
 
     function heMuerto() {
@@ -138,20 +163,47 @@ window.onload = function () {
         return false;
     }
 
+    function detectarColisionesDisparos() {
+        let enemigosAEliminar = [];
+        let disparosAEliminar = [];
+    
+        disparos.forEach((disparo, i) => {
+            navesEnemigas.forEach((enemigo, j) => {
+                if (colision(disparo, enemigo)) {
+                    enemigosAEliminar.push(j);
+                    disparosAEliminar.push(i);
+                }
+            });
+        });
+    
+        // Eliminar enemigos y disparos SIN errores en los índices
+        navesEnemigas = navesEnemigas.filter((_, idx) => !enemigosAEliminar.includes(idx));
+        disparos = disparos.filter((_, idx) => !disparosAEliminar.includes(idx));
+    }
+
     function colision(objeto1, objeto2) {
-        console.log("Verificando colisión entre:", objeto1, objeto2); // Depuración
-        if (objeto1.x < objeto2.x + objeto2.width &&
-            objeto1.x + objeto1.width > objeto2.x &&
-            objeto1.y < objeto2.y + objeto2.height &&
-            objeto1.y + objeto1.height > objeto2.y) {
+        // Englobo las propiedades de ancho y alto para que funcione con mis distintos objetos
+        const ancho1 = objeto1.ancho || objeto1.width || objeto1.tamañoX;
+        const alto1 = objeto1.alto || objeto1.height || objeto1.tamañoY;
+        const ancho2 = objeto2.ancho || objeto2.width || objeto2.tamañoX;
+        const alto2 = objeto2.alto || objeto2.height || objeto2.tamañoY;
+    
+        if (
+            objeto1.x < objeto2.x + ancho2 &&
+            objeto1.x + ancho1 > objeto2.x &&
+            objeto1.y < objeto2.y + alto2 &&
+            objeto1.y + alto1 > objeto2.y
+        ) {
             return true;
         }
         return false;
     }
 
     function pararJuego() {
+        estoyMuerto = true;
         clearInterval(frecuenciaJuego);
         clearInterval(frecuenciaSprite);
+        disparos = []; 
         console.log("Animaciones paradas");
     }
 
