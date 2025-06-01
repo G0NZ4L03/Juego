@@ -17,15 +17,8 @@
 
         this.actualizarAnimacion = function () {
             this.posicion = (this.posicion + 1) % 2; // Avanzar entre frames del sprite
-            this.moverEnemigo(); // Llamar a la función para mover el enemigo
         };
     
-        this.moverEnemigo = function () {
-            this.y += this.velocidad; // Mover el enemigo hacia abajo
-            if (this.y > TOPEABAJO) {
-                this.y = -this.tamañoY; // Reiniciar la posición si sale del canvas
-            }
-        };
     }
 
     Enemigo.prototype.imagen = new Image();
@@ -34,7 +27,6 @@
     Enemigo.prototype.dibujarEnemigo = function (ctx_) {
  		// Dibujamos los enemigos
 
-        
          ctx_.drawImage(this.imagen, // Imagen completa con todos los comecocos (Sprite)
             this.animacionEnemigos[this.posicion][0],    // Posicion X del sprite donde se encuentra el comecocos que voy a recortar del sprite para dibujar
             this.animacionEnemigos[this.posicion][1],      // Posicion Y del sprite donde se encuentra el comecocos que voy a recortar del sprite para dibujar
@@ -43,27 +35,5 @@
             this.tamañoX, this.tamañoY // Tamaño en el canvas
         );
             
-    }
-
-	function abreCierraBoca() {
-		
-		if (xDerecha) miComecocos.animacionComecocos = miComecocos.spriteDerecha;		
-		
-		if (xIzquierda) miComecocos.animacionComecocos = miComecocos.spriteIzquierda;				
-
-	    posicion = (posicion + 1) % 2;  // Cargará posiciones 0 y 1 del array
-		
-	}
-    
-    Enemigo.prototype.moverEnemigoDerecha = function () {
-        this.x = this.x + this.velocidad;
-    }
-
-    Enemigo.prototype.moverEnemigoIzquierda = function () {
-        this.x = this.x - this.velocidad;
-    }
-
-    Enemigo.prototype.moverEnemigoAbajo = function () {
-        this.y = this.y + BAJADAENEMIGO;	
     }
 

@@ -6,6 +6,9 @@ window.onload = function () {
     let frecuenciaJuego;
     let frecuenciaSprite;
 
+    let direccionHorda = 1; // 1: derecha, -1: izquierda
+    let navesDestruidas = 0;
+
     //Variables canvas
     let canvas;
     let ctx;
@@ -58,10 +61,11 @@ window.onload = function () {
     }
 
     function movimientoEnemigos() {
-        for (let i = 0; i < navesEnemigas.length; i++) {
-            navesEnemigas[i].actualizarAnimacion();
-        }
-    };
+        navesEnemigas.forEach(enemigo => {
+            enemigo.actualizarAnimacion();
+        });
+    }
+    
 
     // 5. Funciones de manejo de eventos
     function keyDown(evt) {
@@ -105,6 +109,27 @@ window.onload = function () {
         }
     }
 
+    function moverHorda() {
+        // Calcular si algún enemigo toca el borde
+        let tocaBorde = false;
+        // Mover todos los enemigos en la dirección de la horda
+        navesEnemigas.forEach(enemigo => {
+            enemigo.x += direccionHorda * enemigo.velocidad;
+            if (enemigo.x + enemigo.tamañoX >= canvas.width || enemigo.x <= 0) {
+                tocaBorde = true;
+            }
+        });
+        // Si algún enemigo toca el borde, cambiar dirección y bajar la horda
+        if (tocaBorde) {
+            direccionHorda *= -1;
+            navesEnemigas.forEach(enemigo => {
+                enemigo.y += BAJADAENEMIGO; // Bajar la horda
+                enemigo.velocidad += 0.15; // Aumento de dificultad aumentando velocidad
+            });
+        }
+
+    }
+
     function actualizarDisparos() {
         if (estoyMuerto) return;
 
@@ -120,34 +145,35 @@ window.onload = function () {
 
     function generaAnimación() {
 
+        if (heMuerto()) {
+            estoyMuerto = true;
+            console.log("He muerto");
+            pararJuego();
+
+            // Repintar canvas al morir
             if (heMuerto()) {
-                estoyMuerto = true;
-                console.log("He muerto");
                 pararJuego();
 
-                // Repintar canvas al morir
-                if (heMuerto()) {
-                    pararJuego();
-                    
-                    // Pintar fondo negro
-                    ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-                
-                    // Pintar GAME OVER
-                    ctx.fillStyle = "white";
-                    ctx.font = "48px Arial";
-                    ctx.textAlign = "center";
-                    ctx.fillText("GAME OVER", canvas.width / 2, 150);
-                
-                    return;
-                }
-                return; 
+                // Pintar fondo negro
+                ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Pintar GAME OVER
+                ctx.fillStyle = "white";
+                ctx.font = "48px Arial";
+                ctx.textAlign = "center";
+                ctx.fillText("GAME OVER", canvas.width / 2, 150);
+
+                return;
             }
-            
+            return;
+        }
+
         dibujarFondo();
         dibujarNave();
+        moverHorda();
         dibujarEnemigo();
-        detectarColisionesDisparos(); 
+        detectarColisionesDisparos();
 
         console.log("Mi nave:", miNave); // Depuración
         console.log("Enemigos:", navesEnemigas);// Depuración
@@ -166,16 +192,18 @@ window.onload = function () {
     function detectarColisionesDisparos() {
         let enemigosAEliminar = [];
         let disparosAEliminar = [];
-    
+
         disparos.forEach((disparo, i) => {
             navesEnemigas.forEach((enemigo, j) => {
                 if (colision(disparo, enemigo)) {
                     enemigosAEliminar.push(j);
                     disparosAEliminar.push(i);
+                    navesDestruidas++;
+                    document.getElementById("navesDestruidas").textContent = "Naves Destruidas: " + navesDestruidas;
                 }
             });
         });
-    
+
         // Eliminar enemigos y disparos SIN errores en los índices
         navesEnemigas = navesEnemigas.filter((_, idx) => !enemigosAEliminar.includes(idx));
         disparos = disparos.filter((_, idx) => !disparosAEliminar.includes(idx));
@@ -187,7 +215,7 @@ window.onload = function () {
         const alto1 = objeto1.alto || objeto1.height || objeto1.tamañoY;
         const ancho2 = objeto2.ancho || objeto2.width || objeto2.tamañoX;
         const alto2 = objeto2.alto || objeto2.height || objeto2.tamañoY;
-    
+
         if (
             objeto1.x < objeto2.x + ancho2 &&
             objeto1.x + ancho1 > objeto2.x &&
@@ -203,7 +231,7 @@ window.onload = function () {
         estoyMuerto = true;
         clearInterval(frecuenciaJuego);
         clearInterval(frecuenciaSprite);
-        disparos = []; 
+        disparos = [];
         console.log("Animaciones paradas");
     }
 
