@@ -8,6 +8,7 @@ window.onload = function () {
 
     let direccionHorda = 1; // 1: derecha, -1: izquierda
     let navesDestruidas = 0;
+    let nivel = 1;
 
     //Variables canvas
     let canvas;
@@ -29,6 +30,8 @@ window.onload = function () {
         let posicionY = 100;
         for (let i = 0; i < 24; i++) {
             miEnemigo = new Enemigo(posicionX, posicionY);
+            // Aumenta la velocidad según el nivel
+            miEnemigo.velocidad += (nivel - 1) * 0.9;
             navesEnemigas.push(miEnemigo);
             posicionX += 40; // Espacio entre naves enemigas
             if (posicionX > canvas.width - 60) { // A 60px del borde se baja una fila
@@ -65,7 +68,7 @@ window.onload = function () {
             enemigo.actualizarAnimacion();
         });
     }
-    
+
 
     // 5. Funciones de manejo de eventos
     function keyDown(evt) {
@@ -151,24 +154,24 @@ window.onload = function () {
             pararJuego();
 
             // Repintar canvas al morir
-            if (heMuerto()) {
-                pararJuego();
+            // Pintar fondo negro
+            ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                // Pintar fondo negro
-                ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            // Pintar GAME OVER
+            ctx.fillStyle = "white";
+            ctx.font = "48px Arial";
+            ctx.textAlign = "center";
+            ctx.fillText("GAME OVER", canvas.width / 2, 150);
 
-                // Pintar GAME OVER
-                ctx.fillStyle = "white";
-                ctx.font = "48px Arial";
-                ctx.textAlign = "center";
-                ctx.fillText("GAME OVER", canvas.width / 2, 150);
-
-                return;
-            }
             return;
         }
-
+        // Si no estoy muerto y he matado a todos los enemigos, subo de nivel
+        if (navesEnemigas.length === 0) {
+            nivel++;
+            document.getElementById("nivel").textContent = "Nivel: " + nivel;
+            generarNavesEnemigas();
+        }
         dibujarFondo();
         dibujarNave();
         moverHorda();
@@ -227,14 +230,40 @@ window.onload = function () {
         return false;
     }
 
+    // Función para guardar la puntuación
+    function guardarPuntuacion(puntos) {
+        let puntuaciones = JSON.parse(localStorage.getItem('puntuacionesAltas')) || [];
+        puntuaciones.push(puntos);
+        puntuaciones.sort((a, b) => b - a); // Ordenar de mayor a menor
+        puntuaciones = puntuaciones.slice(0, 5); // Solo las 5 mejores
+        localStorage.setItem('puntuacionesAltas', JSON.stringify(puntuaciones));
+    }
+
+    // Función para mostrar las puntuaciones en el HTML
+    function mostrarPuntuacionesAltas() {
+        let puntuaciones = JSON.parse(localStorage.getItem('puntuacionesAltas')) || [];
+        let lista = document.getElementById('listaPuntuacionesAltas');
+        lista.innerHTML = '';
+        puntuaciones.forEach(puntos => {
+            let li = document.createElement('li');
+            li.textContent = puntos + ' naves destruidas';
+            lista.appendChild(li);
+        });
+    }
+
     function pararJuego() {
         estoyMuerto = true;
         clearInterval(frecuenciaJuego);
         clearInterval(frecuenciaSprite);
         disparos = [];
         console.log("Animaciones paradas");
+
+        // Guardo puntuación en localStorage
+        guardarPuntuacion(navesDestruidas);
+        mostrarPuntuacionesAltas();
     }
 
+    mostrarPuntuacionesAltas();
     document.getElementById("comenzarJuego").onclick = comenzarJuego;
 
     // 7. Función para comenzar el juego

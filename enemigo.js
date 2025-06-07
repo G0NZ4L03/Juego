@@ -1,11 +1,12 @@
     // 3. Definición de la clase enemigo y sus métodos en el prototipo
 
     let posicion;
+    let velocidad = 3
 
     function Enemigo(x_, y_) {
         this.x = x_;
         this.y = y_; 
-        this.velocidad = ENEMIGOVELOCIDAD;
+        this.velocidad = velocidad;
         this.tamañoX = RECORTEENEMIGOX;
         this.tamañoY = RECORTEENEMIGOY;
         this.animacionEnemigos = [

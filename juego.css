@@ -3,6 +3,7 @@ body {
     background-image: url('assets/fondo.png');
     color: #FFFFFF;
     text-align: center;
+    font-family: 'Arial', sans-serif;
 }
 
 #miCanvas {
@@ -11,29 +12,49 @@ body {
 }
 
 h1 {
-    font-size: 2.3rem;
+    font-size: 50px;
 }
 
 button {
-    font-size: 1.3rem;
+    font-size: 20px;
     background-color: #4CAF50;
     color: white;
-    padding: 15px 30px;
+    padding: 10px 30px;
     border-radius: 5px;
     border: none;
     cursor: pointer;
+    margin-bottom: 15px;
 }
 
 button:hover {
     background-color: #3e8f47;
     transform: scale(0.97);
-    transition: background-color 0.3s ease;
+    transition: background-color 0.5s ease;
 }
 
-.contadores{
-    font-size: 1.2rem;
-    display: flex;
-    gap: 20px;
-    justify-content: center;
-    margin: 10px;
+#contadores {
+    position: fixed;
+    font-size: 25px;
+    top: 33%;
+    left: 15%;
+}
+
+.lvl {
+    font-size: 25px;
+}
+
+#puntuacionesAltas {
+
+    position: fixed;
+    font-size: 25px;
+    top: 20%;
+    right: 10%;
+}
+
+#puntuacionesAltas ul li {
+    background-color: black;
+    border : 2px solid white;
+    list-style-type: none;
+    margin: 5px 0;
+    padding: 20px;
 }
