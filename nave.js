@@ -1,4 +1,4 @@
-    // 2. Definición de la clase nave y sus métodos en el prototipo
+// 2. Definición de la clase nave y sus métodos en el prototipo
     function Nave (naveX, naveY) {
         this.x = naveX;
         this.y = naveY;
@@ -15,8 +15,12 @@
     }
 
     Nave.prototype.moverNaveDrch = function () {
-        if (this.x < TOPEDERECHA) {
+        if (this.x + this.ancho < TOPEDERECHA) {
             this.x += this.velocidad;
+            // Ajuste para no pasar el borde derecho
+            if (this.x + this.ancho > TOPEDERECHA) {
+                this.x = TOPEDERECHA - this.ancho;
+            }
         }
     }
 
@@ -26,4 +30,3 @@
         }
     }
 
-    

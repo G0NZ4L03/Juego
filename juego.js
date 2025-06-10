@@ -72,6 +72,8 @@ window.onload = function () {
 
     // 5. Funciones de manejo de eventos
     function keyDown(evt) {
+        //si he muerto no permito mover la nave
+        if (estoyMuerto) return;
         switch (evt.keyCode) {
             case TECLAIZQ:
                 miNave.moverNaveIzq();
@@ -95,6 +97,9 @@ window.onload = function () {
     }
 
     function disparo(evt) {
+        // Añado esto para que no inicie el juego al disparar en pantalla de GAME OVER o WINNER
+        if (estoyMuerto) return;
+
         if (evt.keyCode == TECLAESPACIO) {
             reproducirSonidoDisparo();
             console.log("funcion disparo llamada");
@@ -159,18 +164,52 @@ window.onload = function () {
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             // Pintar GAME OVER
-            ctx.fillStyle = "white";
+            ctx.fillStyle = "red";
             ctx.font = "48px Arial";
             ctx.textAlign = "center";
             ctx.fillText("GAME OVER", canvas.width / 2, 150);
+
+            // Volver a habilitar el botón
+            document.getElementById("comenzarJuego").onclick = comenzarJuego;
+            // Eliminar el listener de keydown para evitar que se inicie el juego al disparar
+            window.removeEventListener('keydown', keyDown, false);
+
 
             return;
         }
         // Si no estoy muerto y he matado a todos los enemigos, subo de nivel
         if (navesEnemigas.length === 0) {
-            nivel++;
-            document.getElementById("nivel").textContent = "Nivel: " + nivel;
-            generarNavesEnemigas();
+            //Establezco el nivel 3 como maximo
+            if (nivel < 3) {
+                nivel++;
+                document.getElementById("nivel").textContent = "Nivel: " + nivel;
+                generarNavesEnemigas();
+            } else {
+                //Si no, falseo la muerte para parar el juego y escribir WINNER
+                estoyMuerto = true;
+                clearInterval(frecuenciaJuego);
+                clearInterval(frecuenciaSprite);
+
+                // Fondo y mensaje WINNER
+                ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.fillStyle = "green";
+                ctx.font = "48px Arial";
+                ctx.textAlign = "center";
+                ctx.fillText("WINNER", canvas.width / 2, 150);
+
+                // Volver a habilitar el botón
+                document.getElementById("comenzarJuego").onclick = comenzarJuego;
+                // Eliminar el listener de keydown para evitar que se inicie el juego al disparar
+                window.removeEventListener('keydown', keyDown, false);
+
+                // Guardar puntuación y mostrar ranking
+                guardarPuntuacion(navesDestruidas);
+                mostrarPuntuacionesAltas();
+                return;
+            }
+
         }
         dibujarFondo();
         dibujarNave();
@@ -178,8 +217,6 @@ window.onload = function () {
         dibujarEnemigo();
         detectarColisionesDisparos();
 
-        console.log("Mi nave:", miNave); // Depuración
-        console.log("Enemigos:", navesEnemigas);// Depuración
 
     }
 
@@ -268,11 +305,20 @@ window.onload = function () {
 
     // 7. Función para comenzar el juego
     function comenzarJuego() {
+        // Reinicio las variables y el html cada vez que empiezo
+        navesEnemigas = [];
+        navesDestruidas = 0;
+        nivel = 1;
+        estoyMuerto = false;
+        disparos = [];
+        existeDisparo = false;
+        direccionHorda = 1;
+
+        document.getElementById("nivel").textContent = "Nivel: " + nivel;
+        document.getElementById("navesDestruidas").textContent = "Naves Destruidas: " + navesDestruidas;
+
         canvas = document.getElementById('miCanvas');
         ctx = canvas.getContext('2d');
-
-        console.log("empieza el juego");
-        console.log(navesEnemigas); // Depuración
 
         generarNave();
         generarNavesEnemigas();
@@ -288,7 +334,8 @@ window.onload = function () {
         // Desactivar el botón para evitar múltiples llamadas
         document.getElementById("comenzarJuego").onclick = null;
 
-        // Añadir el evento keydown
+        // Elimino el listener antes de añadirlo para evitar duplicados con los reinicios del juego
+        window.removeEventListener('keydown', keyDown, false);
         window.addEventListener('keydown', keyDown, false);
     }
 }
